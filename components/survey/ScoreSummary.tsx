@@ -64,7 +64,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
     <div className="mx-auto flex w-full min-w-0 max-w-lg flex-col gap-8 px-4 py-10 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
       <header>
         <h1 className="mb-1 text-base font-medium text-zinc-500 dark:text-zinc-400">
-          Locus - 学習傾向分析
+          Locus - 学習傾向診断
         </h1>
       </header>
 
@@ -89,24 +89,31 @@ export function ScoreSummary({ report, onRetry }: Props) {
                   {report.archetypeLabelJa}
                 </span>
                 <span
-                  className={`inline-block text-sm text-zinc-500 transition-transform dark:text-zinc-600 ${
-                    isArchetypeCardVisible ? "rotate-180" : "rotate-0"
-                  }`}
+                  className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-zinc-400 text-zinc-600 dark:border-zinc-500 dark:text-zinc-700"
                   aria-hidden="true"
                 >
                   <svg
                     viewBox="0 0 24 24"
-                    className="h-4 w-4"
+                    className="h-3.5 w-3.5"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M7 10L12 15L17 10"
+                      d="M6 12H18"
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
+                    {!isArchetypeCardVisible && (
+                      <path
+                        d="M12 6V18"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
                   </svg>
                 </span>
               </div>

@@ -8,7 +8,7 @@ export default function Home() {
           Locus
         </h1>
         <p className="mb-10 text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-          質問に答えて、自分の傾向を振り返りましょう。
+          質問に答えて、自分の学習傾向を明らかにしましょう。
         </p>
         <Link
           href="/survey"

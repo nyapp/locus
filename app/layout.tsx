@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Locus - 学習傾向分析",
+  title: "Locus - 学習傾向診断",
   description: "質問への回答（学生向け）",
 };
 
