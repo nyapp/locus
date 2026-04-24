@@ -1,5 +1,11 @@
 import type { LikertValue, Question, ScaleOption } from "./types";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+function withBasePath(path: string): string {
+  return `${basePath}${path}`;
+}
+
 function parseCSVLine(line: string): string[] {
   const out: string[] = [];
   let cur = "";
@@ -107,13 +113,13 @@ export function parseScaleCSV(text: string): ScaleOption[] {
 }
 
 export async function loadQuestions(): Promise<Question[]> {
-  const res = await fetch("/data/questions.csv");
+  const res = await fetch(withBasePath("/data/questions.csv"));
   if (!res.ok) throw new Error("設問の読み込みに失敗しました");
   return parseQuestionsCSV(await res.text());
 }
 
 export async function loadScale(): Promise<ScaleOption[]> {
-  const res = await fetch("/data/scale.csv");
+  const res = await fetch(withBasePath("/data/scale.csv"));
   if (!res.ok) throw new Error("選択肢の読み込みに失敗しました");
   return parseScaleCSV(await res.text());
 }
