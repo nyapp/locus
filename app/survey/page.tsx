@@ -100,6 +100,35 @@ export default function SurveyPage() {
     setHint(null);
   }, []);
 
+  useEffect(() => {
+    if (!current || completed || scale.length === 0) return;
+
+    const allowedValues = new Set(scale.map((option) => option.value.toString()));
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.isContentEditable ||
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT")
+      ) {
+        return;
+      }
+
+      if (!allowedValues.has(event.key)) return;
+      setAnswer(current.id, Number(event.key) as LikertValue);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [current, completed, scale, setAnswer]);
+
   const goNext = useCallback(() => {
     if (!current) return;
     if (currentAnswer === undefined) {
@@ -129,6 +158,38 @@ export default function SurveyPage() {
     setScoreReport(report);
     setCompleted(true);
   }, [current, currentAnswer, questions, answers]);
+
+  useEffect(() => {
+    if (!current || completed) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key !== "Enter") return;
+
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.isContentEditable ||
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT")
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      if (index === total - 1) {
+        finish();
+        return;
+      }
+      goNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [current, completed, index, total, finish, goNext]);
 
   const handleRetry = useCallback(() => {
     clearScoreReport();
