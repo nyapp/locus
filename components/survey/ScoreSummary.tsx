@@ -113,7 +113,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
           values={[...bfValues]}
         />
         <RadarChart
-          title="動機づけ・学習スタイル（SDT + Kolb 主要4軸）"
+          title="動機動機・学習スタイル（SDT + Kolb）"
           labels={[...STYLE_RADAR_LABELS]}
           values={[...styleValues]}
         />

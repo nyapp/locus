@@ -15,6 +15,7 @@ type Props = {
 export function RadarChart({ title, labels, values, size = 220 }: Props) {
   const titleId = useId();
   const n = labels.length;
+  const viewBoxPadding = 24;
   const cx = size / 2;
   const cy = size / 2;
   const maxR = (size / 2) * 0.78;
@@ -46,7 +47,7 @@ export function RadarChart({ title, labels, values, size = 220 }: Props) {
         <svg
           width={size}
           height={size}
-          viewBox={`0 0 ${size} ${size}`}
+          viewBox={`${-viewBoxPadding} ${-viewBoxPadding} ${size + viewBoxPadding * 2} ${size + viewBoxPadding * 2}`}
           role="img"
           aria-label={title}
         >

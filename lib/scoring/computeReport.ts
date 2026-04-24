@@ -47,10 +47,10 @@ export function computeScoreReport(
 /** 表示用: 解釈指標の日本語名 */
 export const COMPOSITE_LABEL_JA: Record<(typeof COMPOSITE_KEYS)[number], string> =
   {
-    exploration: "探索性",
-    persistence: "継続性",
-    intrinsicMotivation: "内発動機",
-    reflectionDepth: "内省力",
-    execution: "実行力",
-    collaboration: "協働性",
+    exploration: "進んで挑戦する力",
+    persistence: "最後までやり抜く力",
+    intrinsicMotivation: "内側から湧く主体性",
+    reflectionDepth: "内省して糧にする力",
+    execution: "実行する行動力",
+    collaboration: "他人と協力できる力",
   };
