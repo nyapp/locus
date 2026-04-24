@@ -15,7 +15,12 @@ type Props = {
 export function RadarChart({ title, labels, values, size = 220 }: Props) {
   const titleId = useId();
   const n = labels.length;
-  const viewBoxPadding = 24;
+  const longestLabelLength = labels.reduce(
+    (max, label) => Math.max(max, label.length),
+    0,
+  );
+  // 軸ラベルの文字幅に応じて viewBox 余白を確保し、テキストの見切れを防ぐ。
+  const viewBoxPadding = Math.max(24, 20 + longestLabelLength * 6);
   const cx = size / 2;
   const cy = size / 2;
   const maxR = (size / 2) * 0.78;
@@ -73,8 +78,8 @@ export function RadarChart({ title, labels, values, size = 220 }: Props) {
           ))}
           {labels.map((lab, i) => {
             const a = angleAt(i);
-            const lx = cx + (maxR + 14) * Math.cos(a);
-            const ly = cy + (maxR + 14) * Math.sin(a);
+            const lx = cx + (maxR + 12) * Math.cos(a);
+            const ly = cy + (maxR + 12) * Math.sin(a);
             const anchor =
               Math.abs(Math.cos(a)) < 0.01
                 ? "middle"
@@ -88,8 +93,8 @@ export function RadarChart({ title, labels, values, size = 220 }: Props) {
                 y={ly}
                 textAnchor={anchor}
                 dominantBaseline="middle"
-                className="fill-zinc-500 text-[9px] dark:fill-zinc-400"
-                style={{ fontSize: 9 }}
+                className="fill-zinc-500 text-[11px] dark:fill-zinc-400"
+                style={{ fontSize: 11 }}
               >
                 {lab}
               </text>
