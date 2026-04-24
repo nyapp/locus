@@ -23,6 +23,7 @@ import {
 } from "@/lib/scoring";
 import type { ScoreReport } from "@/lib/scoring/types";
 import type { AnswersMap, LikertValue, Question, ScaleOption } from "@/lib/types";
+import { isInteractiveShortcutTarget } from "./keyboardGuards";
 
 const QUESTION_LABEL_ID = "survey-question-text";
 
@@ -108,16 +109,7 @@ export default function SurveyPage() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
-      const target = event.target as HTMLElement | null;
-      if (
-        target &&
-        (target.isContentEditable ||
-          target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.tagName === "SELECT")
-      ) {
-        return;
-      }
+      if (isInteractiveShortcutTarget(event.target)) return;
 
       if (!allowedValues.has(event.key)) return;
       setAnswer(current.id, Number(event.key) as LikertValue);
@@ -166,16 +158,7 @@ export default function SurveyPage() {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (event.key !== "Enter") return;
 
-      const target = event.target as HTMLElement | null;
-      if (
-        target &&
-        (target.isContentEditable ||
-          target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.tagName === "SELECT")
-      ) {
-        return;
-      }
+      if (isInteractiveShortcutTarget(event.target)) return;
 
       event.preventDefault();
       if (index === total - 1) {
