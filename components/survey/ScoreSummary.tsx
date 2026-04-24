@@ -246,15 +246,17 @@ export function ScoreSummary({ report, onRetry }: Props) {
       <section aria-labelledby="notes-heading">
         <h2
           id="notes-heading"
-          className="mb-2 text-sm font-semibold text-zinc-800 dark:text-zinc-100"
+          className="mb-1 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
         >
           補足
         </h2>
-        <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          <li>数値帯の「低め」は短所ではなく、学び方のクセの目安です。</li>
+        <ul className="list-inside list-disc space-y-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
           <li>
-            感情反応性は Big Five
-            の神経症傾向に対応する素材指標として、安定側から算出した値です。
+            数値帯の「低め」は、短所の断定ではなく、学び方の傾向をみる際の参考として扱っています。
+          </li>
+          <li>
+            感情反応性は、Big Five
+            の神経症傾向に関連する補助的な指標として、安定側の値をもとに算出しています。
           </li>
         </ul>
       </section>
