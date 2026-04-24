@@ -53,11 +53,10 @@ describe("computeArchetypeLabel", () => {
     expect(r).not.toBeNull();
     expect(r!.key).toBe(COMPOSITE_TIE_BREAK_ORDER[0]);
     expect(r!.confidence).toBe(0);
-    expect(r!.confidenceBand).toBe("low");
   });
 
-  it("delta の境界値で信頼度帯が切り替わる", () => {
-    const low = computeArchetypeLabel({
+  it("信頼度は 1位と2位の差分を 0〜100 で返す", () => {
+    const smallGap = computeArchetypeLabel({
       exploration: 60,
       persistence: 55,
       intrinsicMotivation: 20,
@@ -65,7 +64,7 @@ describe("computeArchetypeLabel", () => {
       execution: 20,
       collaboration: 20,
     });
-    const medium = computeArchetypeLabel({
+    const mediumGap = computeArchetypeLabel({
       exploration: 60,
       persistence: 54,
       intrinsicMotivation: 20,
@@ -73,7 +72,7 @@ describe("computeArchetypeLabel", () => {
       execution: 20,
       collaboration: 20,
     });
-    const high = computeArchetypeLabel({
+    const largeGap = computeArchetypeLabel({
       exploration: 60,
       persistence: 48,
       intrinsicMotivation: 20,
@@ -81,9 +80,9 @@ describe("computeArchetypeLabel", () => {
       execution: 20,
       collaboration: 20,
     });
-    expect(low?.confidenceBand).toBe("low");
-    expect(medium?.confidenceBand).toBe("medium");
-    expect(high?.confidenceBand).toBe("high");
+    expect(smallGap?.confidence).toBe(5);
+    expect(mediumGap?.confidence).toBe(6);
+    expect(largeGap?.confidence).toBe(12);
   });
 
   it("null を含むと算出不可", () => {

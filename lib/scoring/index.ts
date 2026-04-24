@@ -33,7 +33,6 @@ export {
   COMPOSITE_TYPE_SUFFIX,
   computeArchetypeLabel,
   computeTop3TypeLabels,
-  type ArchetypeConfidenceBand,
   type ArchetypeResult,
   type Top3TypeResult,
 } from "./typeLabels";

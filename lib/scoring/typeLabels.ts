@@ -40,13 +40,10 @@ export const ARCHETYPE_ANALYSIS_JA: Record<CompositeKey, string> = {
     "他者の資質を認め、自己の能力と掛け合わせることで全体出力を最大化させる調整力。個の限界を理解した上で、組織的な成果を導き出すための「共創のプラットフォーム」としての適性。",
 };
 
-export type ArchetypeConfidenceBand = "high" | "medium" | "low";
-
 export type ArchetypeResult = {
   key: CompositeKey;
   label: string;
   confidence: number;
-  confidenceBand: ArchetypeConfidenceBand;
   reasons: [string, string, string];
   topKeys: [CompositeKey, CompositeKey, CompositeKey];
   topScores: [number, number, number];
@@ -90,12 +87,6 @@ export function computeTop3TypeLabels(
   return { keys, parts, line: parts.join(" × ") };
 }
 
-function getConfidenceBand(deltaTop1Top2: number): ArchetypeConfidenceBand {
-  if (deltaTop1Top2 >= 12) return "high";
-  if (deltaTop1Top2 >= 6) return "medium";
-  return "low";
-}
-
 /**
  * 6 指標すべて数値のときのみ単一ラベルを算出する。
  * 同点時は COMPOSITE_TIE_BREAK_ORDER の若い方を優先する。
@@ -130,7 +121,7 @@ export function computeArchetypeLabel(
   const key = topKeys[0];
   const label = ARCHETYPE_LABEL_JA[key];
   const deltaTop1Top2 = Number((topScores[0] - topScores[1]).toFixed(2));
-  const confidenceBand = getConfidenceBand(deltaTop1Top2);
+  const confidence = deltaTop1Top2;
   const reasons: [string, string, string] = [
     `${key}: ${Math.round(topScores[0])}`,
     `${topKeys[1]}: ${Math.round(topScores[1])}`,
@@ -140,8 +131,7 @@ export function computeArchetypeLabel(
   return {
     key,
     label,
-    confidence: deltaTop1Top2,
-    confidenceBand,
+    confidence,
     reasons,
     topKeys,
     topScores,

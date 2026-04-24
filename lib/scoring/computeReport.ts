@@ -45,7 +45,6 @@ export function computeScoreReport(
     archetypeKey: archetype?.key ?? null,
     archetypeLabelJa: archetype?.label ?? null,
     archetypeConfidence: archetype?.confidence ?? null,
-    archetypeConfidenceBand: archetype?.confidenceBand ?? null,
     archetypeReasons: archetype?.reasons ?? null,
   };
 }

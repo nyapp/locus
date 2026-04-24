@@ -37,14 +37,6 @@ const STYLE_RADAR_LABELS = [
 export function ScoreSummary({ report, onRetry }: Props) {
   const { dimensions, emotionalReactivity, composites, bandByComposite } =
     report;
-  const confidenceBandJa =
-    report.archetypeConfidenceBand === "high"
-      ? "高"
-      : report.archetypeConfidenceBand === "medium"
-        ? "中"
-        : report.archetypeConfidenceBand === "low"
-          ? "低"
-          : null;
 
   const bfValues = [
     dimensions.Openness,
@@ -80,29 +72,39 @@ export function ScoreSummary({ report, onRetry }: Props) {
           >
             学習アーキタイプ
           </h2>
-          <p className="rounded-xl bg-zinc-900 px-4 py-3 text-xl font-semibold leading-snug text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900">
-            {report.archetypeLabelJa}
-          </p>
-          {report.archetypeKey && (
-            <p className="mt-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              鑑定の根拠（分析内容）: {ARCHETYPE_ANALYSIS_JA[report.archetypeKey]}
+          <div>
+            <p className="rounded-2xl bg-zinc-100 px-6 py-5 text-xl font-semibold leading-snug text-zinc-900 dark:bg-zinc-200 dark:text-zinc-900">
+              {report.archetypeLabelJa}
             </p>
-          )}
-          {report.archetypeConfidence !== null && confidenceBandJa && (
-            <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-              信頼度: {report.archetypeConfidence.toFixed(1)}（{confidenceBandJa}）
-            </p>
-          )}
-          {report.archetypeReasons && (
-            <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              根拠: {report.archetypeReasons.join(" / ")}
-            </p>
-          )}
-          {report.typeLine && (
-            <p className="mt-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              参考（上位3指標）: {report.typeLine}
-            </p>
-          )}
+
+            {report.archetypeKey && (
+              <p className="mt-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                鑑定の根拠（分析内容）: {ARCHETYPE_ANALYSIS_JA[report.archetypeKey]}
+              </p>
+            )}
+
+            <div className="mt-3 space-y-1">
+              {report.archetypeConfidence !== null && report.typeLine ? (
+                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  信頼度: {report.archetypeConfidence.toFixed(1)} / 上位3指標:{" "}
+                  {report.typeLine}
+                </p>
+              ) : report.archetypeConfidence !== null ? (
+                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  信頼度: {report.archetypeConfidence.toFixed(1)}
+                </p>
+              ) : report.typeLine ? (
+                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  上位3指標: {report.typeLine}
+                </p>
+              ) : null}
+              {report.archetypeReasons && (
+                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  根拠: {report.archetypeReasons.join(" / ")}
+                </p>
+              )}
+            </div>
+          </div>
         </section>
       )}
 
