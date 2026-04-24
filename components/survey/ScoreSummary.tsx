@@ -58,13 +58,9 @@ export function ScoreSummary({ report, onRetry }: Props) {
   return (
     <div className="mx-auto flex w-full min-w-0 max-w-lg flex-col gap-8 px-4 py-10 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
       <header>
-        <h1 className="mb-2 text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h1 className="mb-1 text-base font-medium text-zinc-600 dark:text-zinc-300">
           あなたの傾向
         </h1>
-        <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          結果はこの端末のセッションに保存されています（スキーマ版{" "}
-          {report.schemaVersion}）。診断ではなく振り返り用の目安です。
-        </p>
       </header>
 
       {report.typeLine && (
@@ -75,7 +71,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
           >
             タイプ（上位3指標）
           </h2>
-          <p className="text-lg font-medium leading-snug text-zinc-900 dark:text-zinc-50">
+          <p className="rounded-xl bg-zinc-900 px-4 py-3 text-xl font-semibold leading-snug text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900">
             {report.typeLine}
           </p>
         </section>
@@ -86,7 +82,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
           id="composite-heading"
           className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100"
         >
-          解釈用指標
+          学習傾向の分析
         </h2>
         <ul className="flex flex-col gap-4">
           {COMPOSITE_KEYS.map((key) => (
