@@ -38,6 +38,7 @@ const STYLE_RADAR_LABELS = [
 
 export function ScoreSummary({ report, onRetry }: Props) {
   const [isArchetypeCardVisible, setIsArchetypeCardVisible] = useState(true);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const { dimensions, emotionalReactivity, composites, bandByComposite } =
     report;
 
@@ -117,7 +118,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
                 className="mt-3 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900/50"
               >
                 <Image
-                  src="/images/strategic-learning-matrix-chariot.png"
+                  src={`${basePath}/images/strategic-learning-matrix-chariot.png`}
                   alt="The Chariot 末路への進軍のカードイラスト"
                   width={674}
                   height={1024}
