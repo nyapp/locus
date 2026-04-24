@@ -28,8 +28,13 @@ export type {
   ScoreReport,
 } from "./types";
 export {
+  ARCHETYPE_ANALYSIS_JA,
+  ARCHETYPE_LABEL_JA,
   COMPOSITE_TYPE_SUFFIX,
+  computeArchetypeLabel,
   computeTop3TypeLabels,
+  type ArchetypeConfidenceBand,
+  type ArchetypeResult,
   type Top3TypeResult,
 } from "./typeLabels";
 export { getCompositeLowFraming } from "./copy";

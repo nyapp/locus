@@ -4,7 +4,7 @@ import { computeComposites } from "./composites";
 import { computeDimensionScores, buildNormalizedByQuestionId } from "./dimensions";
 import { normalizeItemScore } from "./normalize";
 import { COMPOSITE_TIE_BREAK_ORDER, type TheoryKey } from "./constants";
-import { computeTop3TypeLabels } from "./typeLabels";
+import { computeArchetypeLabel, computeTop3TypeLabels } from "./typeLabels";
 import type { DimensionScores } from "./types";
 
 describe("normalizeItemScore", () => {
@@ -36,6 +36,66 @@ describe("computeTop3TypeLabels tie-break", () => {
     expect(r!.keys[0]).toBe(COMPOSITE_TIE_BREAK_ORDER[0]);
     expect(r!.keys[1]).toBe(COMPOSITE_TIE_BREAK_ORDER[1]);
     expect(r!.keys[2]).toBe(COMPOSITE_TIE_BREAK_ORDER[2]);
+  });
+});
+
+describe("computeArchetypeLabel", () => {
+  it("同点時は COMPOSITE_TIE_BREAK_ORDER の先頭を採用する", () => {
+    const composites = {
+      exploration: 50,
+      persistence: 50,
+      intrinsicMotivation: 50,
+      reflectionDepth: 50,
+      execution: 50,
+      collaboration: 50,
+    };
+    const r = computeArchetypeLabel(composites);
+    expect(r).not.toBeNull();
+    expect(r!.key).toBe(COMPOSITE_TIE_BREAK_ORDER[0]);
+    expect(r!.confidence).toBe(0);
+    expect(r!.confidenceBand).toBe("low");
+  });
+
+  it("delta の境界値で信頼度帯が切り替わる", () => {
+    const low = computeArchetypeLabel({
+      exploration: 60,
+      persistence: 55,
+      intrinsicMotivation: 20,
+      reflectionDepth: 20,
+      execution: 20,
+      collaboration: 20,
+    });
+    const medium = computeArchetypeLabel({
+      exploration: 60,
+      persistence: 54,
+      intrinsicMotivation: 20,
+      reflectionDepth: 20,
+      execution: 20,
+      collaboration: 20,
+    });
+    const high = computeArchetypeLabel({
+      exploration: 60,
+      persistence: 48,
+      intrinsicMotivation: 20,
+      reflectionDepth: 20,
+      execution: 20,
+      collaboration: 20,
+    });
+    expect(low?.confidenceBand).toBe("low");
+    expect(medium?.confidenceBand).toBe("medium");
+    expect(high?.confidenceBand).toBe("high");
+  });
+
+  it("null を含むと算出不可", () => {
+    const r = computeArchetypeLabel({
+      exploration: 80,
+      persistence: null,
+      intrinsicMotivation: 70,
+      reflectionDepth: 60,
+      execution: 55,
+      collaboration: 40,
+    });
+    expect(r).toBeNull();
   });
 });
 

@@ -7,7 +7,7 @@ import {
   computeDimensionScores,
 } from "./dimensions";
 import type { ScoreReport } from "./types";
-import { computeTop3TypeLabels } from "./typeLabels";
+import { computeArchetypeLabel, computeTop3TypeLabels } from "./typeLabels";
 
 /**
  * null 伝播（一文仕様）:
@@ -30,6 +30,7 @@ export function computeScoreReport(
   const composites = computeComposites(dimensions);
   const bandByComposite = computeBandByComposite(composites);
   const top3 = computeTop3TypeLabels(composites);
+  const archetype = computeArchetypeLabel(composites);
 
   return {
     schemaVersion: SCORE_REPORT_SCHEMA_VERSION,
@@ -41,6 +42,11 @@ export function computeScoreReport(
     bandByComposite,
     typeLabelParts: top3?.parts ?? null,
     typeLine: top3?.line ?? null,
+    archetypeKey: archetype?.key ?? null,
+    archetypeLabelJa: archetype?.label ?? null,
+    archetypeConfidence: archetype?.confidence ?? null,
+    archetypeConfidenceBand: archetype?.confidenceBand ?? null,
+    archetypeReasons: archetype?.reasons ?? null,
   };
 }
 

@@ -1,4 +1,5 @@
 import type { CompositeKey, TheoryKey } from "./constants";
+import type { ArchetypeConfidenceBand } from "./typeLabels";
 
 export type BandId =
   | "veryLow"
@@ -33,4 +34,9 @@ export type ScoreReport = {
   /** 方式 C: 6 指標すべて有限のときのみ */
   typeLabelParts: [string, string, string] | null;
   typeLine: string | null;
+  archetypeKey: CompositeKey | null;
+  archetypeLabelJa: string | null;
+  archetypeConfidence: number | null;
+  archetypeConfidenceBand: ArchetypeConfidenceBand | null;
+  archetypeReasons: [string, string, string] | null;
 };
