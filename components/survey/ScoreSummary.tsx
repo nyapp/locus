@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import {
   ARCHETYPE_ANALYSIS_JA,
   BAND_LABEL_JA,
@@ -35,6 +37,7 @@ const STYLE_RADAR_LABELS = [
 ] as const;
 
 export function ScoreSummary({ report, onRetry }: Props) {
+  const [isArchetypeCardVisible, setIsArchetypeCardVisible] = useState(true);
   const { dimensions, emotionalReactivity, composites, bandByComposite } =
     report;
 
@@ -73,9 +76,56 @@ export function ScoreSummary({ report, onRetry }: Props) {
             学習アーキタイプ
           </h2>
           <div>
-            <p className="rounded-2xl bg-zinc-100 px-6 py-5 text-xl font-semibold leading-snug text-zinc-900 dark:bg-zinc-200 dark:text-zinc-900">
-              {report.archetypeLabelJa}
-            </p>
+            <button
+              type="button"
+              onClick={() => setIsArchetypeCardVisible((prev) => !prev)}
+              aria-expanded={isArchetypeCardVisible}
+              aria-controls="archetype-symbol-card"
+              className="w-full rounded-2xl bg-zinc-100 px-6 py-5 text-left text-zinc-900 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:bg-zinc-200 dark:text-zinc-900 dark:focus-visible:ring-zinc-500"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-xl font-semibold leading-snug">
+                  {report.archetypeLabelJa}
+                </span>
+                <span
+                  className={`inline-block text-sm text-zinc-500 transition-transform dark:text-zinc-600 ${
+                    isArchetypeCardVisible ? "rotate-180" : "rotate-0"
+                  }`}
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 10L12 15L17 10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </button>
+
+            {isArchetypeCardVisible && (
+              <div
+                id="archetype-symbol-card"
+                className="mt-3 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900/50"
+              >
+                <Image
+                  src="/images/strategic-learning-matrix-chariot.png"
+                  alt="The Chariot 末路への進軍のカードイラスト"
+                  width={674}
+                  height={1024}
+                  className="h-auto w-full"
+                  priority
+                />
+              </div>
+            )}
 
             {report.archetypeKey && (
               <p className="mt-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
