@@ -36,11 +36,23 @@ const STYLE_RADAR_LABELS = [
   "実験",
 ] as const;
 
+const ARCHETYPE_IMAGE_PATH: Record<CompositeKey, string> = {
+  exploration: "/images/archetype-exploration.png",
+  persistence: "/images/archetype-persistence.png",
+  intrinsicMotivation: "/images/archetype-intrinsic-motivation.png",
+  reflectionDepth: "/images/archetype-reflection-depth.png",
+  execution: "/images/archetype-execution.png",
+  collaboration: "/images/archetype-collaboration.png",
+};
+
 export function ScoreSummary({ report, onRetry }: Props) {
   const [isArchetypeCardVisible, setIsArchetypeCardVisible] = useState(true);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const { dimensions, emotionalReactivity, composites, bandByComposite } =
     report;
+  const archetypeImagePath = report.archetypeKey
+    ? ARCHETYPE_IMAGE_PATH[report.archetypeKey]
+    : null;
 
   const bfValues = [
     dimensions.Openness,
@@ -124,14 +136,16 @@ export function ScoreSummary({ report, onRetry }: Props) {
                 id="archetype-symbol-card"
                 className="mt-3 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900/50"
               >
-                <Image
-                  src={`${basePath}/images/strategic-learning-matrix-chariot.png`}
-                  alt="The Chariot 末路への進軍のカードイラスト"
-                  width={674}
-                  height={1024}
-                  className="h-auto w-full"
-                  priority
-                />
+                {archetypeImagePath && (
+                  <Image
+                    src={`${basePath}${archetypeImagePath}`}
+                    alt={`${report.archetypeLabelJa}のカードイラスト`}
+                    width={674}
+                    height={1024}
+                    className="h-auto w-full"
+                    priority
+                  />
+                )}
               </div>
             )}
 
