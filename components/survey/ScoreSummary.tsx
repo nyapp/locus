@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import {
   ARCHETYPE_ANALYSIS_JA,
+  ARCHETYPE_LABEL_JA,
   BAND_LABEL_JA,
   COMPOSITE_KEYS,
   COMPOSITE_LABEL_JA,
@@ -53,6 +54,17 @@ export function ScoreSummary({ report, onRetry }: Props) {
   const archetypeImagePath = report.archetypeKey
     ? ARCHETYPE_IMAGE_PATH[report.archetypeKey]
     : null;
+  const complementArchetypeKey = COMPOSITE_KEYS.reduce<CompositeKey | null>(
+    (lowestKey, key) => {
+      const score = composites[key];
+      if (score === null) return lowestKey;
+      if (lowestKey === null) return key;
+      const lowestScore = composites[lowestKey];
+      if (lowestScore === null || score < lowestScore) return key;
+      return lowestKey;
+    },
+    null,
+  );
 
   const bfValues = [
     dimensions.Openness,
@@ -173,9 +185,17 @@ export function ScoreSummary({ report, onRetry }: Props) {
                 </p>
               ) : null}
               {report.archetypeReasons && (
-                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  根拠: {report.archetypeReasons.join(" / ")}
-                </p>
+                <>
+                  <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    根拠: {report.archetypeReasons.join(" / ")}
+                  </p>
+                  <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    補完するアーキタイプ:{" "}
+                    {complementArchetypeKey
+                      ? ARCHETYPE_LABEL_JA[complementArchetypeKey]
+                      : "算出不可"}
+                  </p>
+                </>
               )}
             </div>
           </div>
