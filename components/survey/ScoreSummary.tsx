@@ -163,7 +163,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
 
             {report.archetypeKey && (
               <div className="mt-3 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
-                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+                <p className="whitespace-pre-line text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
                   {ARCHETYPE_ANALYSIS_JA[report.archetypeKey]}
                 </p>
               </div>

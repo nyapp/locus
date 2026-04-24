@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { isInteractiveShortcutTarget } from "./keyboardGuards";
+import {
+  blocksSurveyDigitShortcuts,
+  isInteractiveShortcutTarget,
+} from "./keyboardGuards";
 
 type MockElement = {
   tagName?: string;
@@ -16,6 +19,38 @@ function createElement(tagName: string, attrs?: Record<string, string>): MockEle
     hasAttribute: (name) => Boolean(attrs && name in attrs),
   };
 }
+
+describe("blocksSurveyDigitShortcuts", () => {
+  it("ラジオ・チェックボックスでは数字ショートカットを抑止しない", () => {
+    expect(
+      blocksSurveyDigitShortcuts(createElement("input", { type: "radio" }) as EventTarget),
+    ).toBe(false);
+    expect(
+      blocksSurveyDigitShortcuts(
+        createElement("input", { type: "checkbox" }) as EventTarget,
+      ),
+    ).toBe(false);
+  });
+
+  it("テキスト系 input と textarea / select は抑止する", () => {
+    expect(blocksSurveyDigitShortcuts(createElement("input") as EventTarget)).toBe(true);
+    expect(
+      blocksSurveyDigitShortcuts(createElement("input", { type: "text" }) as EventTarget),
+    ).toBe(true);
+    expect(
+      blocksSurveyDigitShortcuts(createElement("input", { type: "number" }) as EventTarget),
+    ).toBe(true);
+    expect(blocksSurveyDigitShortcuts(createElement("textarea") as EventTarget)).toBe(
+      true,
+    );
+    expect(blocksSurveyDigitShortcuts(createElement("select") as EventTarget)).toBe(true);
+  });
+
+  it("ボタン・リンクでは抑止する", () => {
+    expect(blocksSurveyDigitShortcuts(createElement("button") as EventTarget)).toBe(true);
+    expect(blocksSurveyDigitShortcuts(createElement("a") as EventTarget)).toBe(true);
+  });
+});
 
 describe("isInteractiveShortcutTarget", () => {
   it("リンク・ボタン・入力系要素を true にする", () => {

@@ -23,7 +23,10 @@ import {
 } from "@/lib/scoring";
 import type { ScoreReport } from "@/lib/scoring/types";
 import type { AnswersMap, LikertValue, Question, ScaleOption } from "@/lib/types";
-import { isInteractiveShortcutTarget } from "./keyboardGuards";
+import {
+  blocksSurveyDigitShortcuts,
+  isInteractiveShortcutTarget,
+} from "./keyboardGuards";
 
 const QUESTION_LABEL_ID = "survey-question-text";
 
@@ -109,7 +112,7 @@ export default function SurveyPage() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
-      if (isInteractiveShortcutTarget(event.target)) return;
+      if (blocksSurveyDigitShortcuts(event.target)) return;
 
       if (!allowedValues.has(event.key)) return;
       setAnswer(current.id, Number(event.key) as LikertValue);
