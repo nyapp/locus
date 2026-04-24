@@ -64,7 +64,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
     <div className="mx-auto flex w-full min-w-0 max-w-lg flex-col gap-8 px-4 py-10 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
       <header>
         <h1 className="mb-1 text-base font-medium text-zinc-500 dark:text-zinc-400">
-          Strategic Learning Matrix
+          Locus - 学習傾向分析
         </h1>
       </header>
 
@@ -129,20 +129,22 @@ export function ScoreSummary({ report, onRetry }: Props) {
             )}
 
             {report.archetypeKey && (
-              <p className="mt-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                鑑定の根拠（分析内容）: {ARCHETYPE_ANALYSIS_JA[report.archetypeKey]}
-              </p>
+              <div className="mt-3 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
+                <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+                  {ARCHETYPE_ANALYSIS_JA[report.archetypeKey]}
+                </p>
+              </div>
             )}
 
             <div className="mt-3 space-y-1">
               {report.archetypeConfidence !== null && report.typeLine ? (
                 <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  信頼度: {report.archetypeConfidence.toFixed(1)} / 上位3指標:{" "}
+                  判定確信度: {report.archetypeConfidence.toFixed(1)} / 上位3指標:{" "}
                   {report.typeLine}
                 </p>
               ) : report.archetypeConfidence !== null ? (
                 <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  信頼度: {report.archetypeConfidence.toFixed(1)}
+                  判定確信度: {report.archetypeConfidence.toFixed(1)}
                 </p>
               ) : report.typeLine ? (
                 <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
