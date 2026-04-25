@@ -67,6 +67,13 @@ export function ScoreSummary({ report, onRetry }: Props) {
     },
     null,
   );
+  const archetypeAnalysis =
+    report.archetypeKey === null
+      ? null
+      : ARCHETYPE_ANALYSIS_JA[report.archetypeKey]
+          .split("\n\n")
+          .map((paragraph) => paragraph.replace(/\n/g, ""))
+          .join("\n");
 
   const bfValues = [
     dimensions.Openness,
@@ -166,7 +173,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
             {report.archetypeKey && (
               <div className="mt-3 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
                 <p className="whitespace-pre-line text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
-                  {ARCHETYPE_ANALYSIS_JA[report.archetypeKey]}
+                  {archetypeAnalysis}
                 </p>
               </div>
             )}
