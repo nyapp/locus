@@ -6,6 +6,10 @@ import { normalizeItemScore } from "./normalize";
 import { COMPOSITE_TIE_BREAK_ORDER, type TheoryKey } from "./constants";
 import { computeArchetypeLabel, computeTop3TypeLabels } from "./typeLabels";
 import type { DimensionScores } from "./types";
+import {
+  compositeLrBarStyle,
+  formatCompositeLrDisplay,
+} from "./compositeLrDisplay";
 
 describe("normalizeItemScore", () => {
   it("通常項目: 1→0, 5→100", () => {
@@ -162,5 +166,23 @@ describe("Neuroticism 正規化後の平均（安定寄り）", () => {
     const dims = computeDimensionScores(neuroQuestions, norm);
     expect(dims.Neuroticism).not.toBeNull();
     expect(dims.Neuroticism!).toBeLessThan(15);
+  });
+});
+
+describe("composite L/R 表示（中央 50 を 0）", () => {
+  it("50 は 0、左右は離れ度 L/R0–50", () => {
+    expect(formatCompositeLrDisplay(50)).toBe("0");
+    expect(formatCompositeLrDisplay(0)).toBe("L50");
+    expect(formatCompositeLrDisplay(100)).toBe("R50");
+    expect(formatCompositeLrDisplay(38)).toBe("L12");
+    expect(formatCompositeLrDisplay(62)).toBe("R12");
+  });
+
+  it("compositeLrBarStyle は中央から左右に伸びる", () => {
+    expect(compositeLrBarStyle(50)).toEqual({ leftPct: 50, widthPct: 0 });
+    expect(compositeLrBarStyle(0)).toEqual({ leftPct: 0, widthPct: 50 });
+    expect(compositeLrBarStyle(100)).toEqual({ leftPct: 50, widthPct: 50 });
+    expect(compositeLrBarStyle(25)).toEqual({ leftPct: 25, widthPct: 25 });
+    expect(compositeLrBarStyle(75)).toEqual({ leftPct: 50, widthPct: 25 });
   });
 });

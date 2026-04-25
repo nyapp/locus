@@ -12,7 +12,11 @@ export {
   BAND_LABEL_JA,
   computeBandByComposite,
 } from "./bands";
-export { COMPOSITE_LABEL_JA, computeScoreReport } from "./computeReport";
+export {
+  COMPOSITE_EDGE_LABELS_JA,
+  COMPOSITE_LABEL_JA,
+  computeScoreReport,
+} from "./computeReport";
 export { computeComposites } from "./composites";
 export {
   buildNormalizedByQuestionId,
@@ -37,3 +41,9 @@ export {
   type Top3TypeResult,
 } from "./typeLabels";
 export { getCompositeLowFraming } from "./copy";
+export {
+  compositeLrBarStyle,
+  compositeRawToLrDeviation,
+  formatCompositeLrDisplay,
+  type CompositeLrDeviation,
+} from "./compositeLrDisplay";

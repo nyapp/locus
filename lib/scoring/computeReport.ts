@@ -59,3 +59,16 @@ export const COMPOSITE_LABEL_JA: Record<(typeof COMPOSITE_KEYS)[number], string>
     execution: "実行する行動力",
     collaboration: "他人と協力できる力",
   };
+
+/** スコアバー両端: 低い側（左）・高い側（右）。合成式・copy の傾向に合わせた短ラベル */
+export const COMPOSITE_EDGE_LABELS_JA: Record<
+  (typeof COMPOSITE_KEYS)[number],
+  { low: string; high: string }
+> = {
+  exploration: { low: "堅守力", high: "挑戦力" },
+  persistence: { low: "環境依拠力", high: "継続力" },
+  intrinsicMotivation: { low: "外発力", high: "内発力" },
+  reflectionDepth: { low: "先行力", high: "省察力" },
+  execution: { low: "思案力", high: "実行力" },
+  collaboration: { low: "自走力", high: "協働力" },
+};

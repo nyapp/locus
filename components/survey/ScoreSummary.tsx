@@ -5,9 +5,11 @@ import { useState } from "react";
 import {
   ARCHETYPE_ANALYSIS_JA,
   ARCHETYPE_LABEL_JA,
-  BAND_LABEL_JA,
+  COMPOSITE_EDGE_LABELS_JA,
   COMPOSITE_KEYS,
   COMPOSITE_LABEL_JA,
+  compositeLrBarStyle,
+  formatCompositeLrDisplay,
   getCompositeLowFraming,
   type CompositeKey,
 } from "@/lib/scoring";
@@ -205,11 +207,11 @@ export function ScoreSummary({ report, onRetry }: Props) {
       <section aria-labelledby="composite-heading">
         <h2
           id="composite-heading"
-          className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100"
+          className="mb-3 text-sm font-semibold text-zinc-800 dark:text-zinc-100"
         >
           学習傾向の分析
         </h2>
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-2.5">
           {COMPOSITE_KEYS.map((key) => (
             <CompositeBar
               key={key}
@@ -234,7 +236,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
           values={[...bfValues]}
         />
         <RadarChart
-          title="動機動機・学習スタイル（SDT + Kolb）"
+          title="動機づけ・学習スタイル（SDT + Kolb）"
           labels={[...STYLE_RADAR_LABELS]}
           values={[...styleValues]}
         />
@@ -252,7 +254,12 @@ export function ScoreSummary({ report, onRetry }: Props) {
         </h2>
         <ul className="list-inside list-disc space-y-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
           <li>
-            数値帯の「低め」は、短所の断定ではなく、学び方の傾向をみる際の参考として扱っています。
+            学習傾向の分析では、中央を 0（raw
+            スコア50）とし、低め側の離れ度を L0〜50・高め側を
+            R0〜50として表示しています。
+          </li>
+          <li>
+            各指標の下に出る短文は、短所の断定ではなく、学び方の傾向をみる際の参考として扱っています。
           </li>
           <li>
             感情反応性は、Big Five
@@ -284,46 +291,93 @@ function CompositeBar({
   band: BandId | null;
 }) {
   const label = COMPOSITE_LABEL_JA[ckey];
+  const edge = COMPOSITE_EDGE_LABELS_JA[ckey];
   const framing =
     band && value !== null ? getCompositeLowFraming(ckey, band) : null;
 
   if (value === null || band === null) {
     return (
-      <li className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
-        <div className="flex items-baseline justify-between gap-2">
-          <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+      <li className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 dark:border-zinc-700 dark:bg-zinc-900/50">
+        <div className="mb-1.5 flex min-w-0 items-baseline justify-between gap-2">
+          <span className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-800 dark:text-zinc-100">
             {label}
           </span>
-          <span className="text-xs text-zinc-500">算出不可</span>
+          <span className="shrink-0 text-xs text-zinc-500">算出不可</span>
+        </div>
+        <div
+          className="flex flex-col gap-1"
+          aria-label={`スケール（算出不可）: 中央0、${edge.low}側 L0〜50、${edge.high}側 R0〜50`}
+        >
+          <div className="h-2.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-700" />
+          <div className="flex items-start justify-between gap-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400">
+            <span className="min-w-0 text-left">
+              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                {edge.low}
+              </span>
+              <span className="text-zinc-400 dark:text-zinc-500"> · L0〜50</span>
+            </span>
+            <span className="min-w-0 text-right">
+              <span className="text-zinc-400 dark:text-zinc-500">R0〜50 · </span>
+              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                {edge.high}
+              </span>
+            </span>
+          </div>
         </div>
       </li>
     );
   }
 
-  const pct = Math.round(Math.min(100, Math.max(0, value)));
-  const bandJa = BAND_LABEL_JA[band];
+  const lrText = formatCompositeLrDisplay(value);
+  const { leftPct, widthPct } = compositeLrBarStyle(value);
 
   return (
-    <li className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-3 dark:border-zinc-700 dark:bg-zinc-900/50">
-      <div className="mb-2 flex items-baseline justify-between gap-2">
-        <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+    <li className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 dark:border-zinc-700 dark:bg-zinc-900/50">
+      <div className="mb-1.5 flex min-w-0 items-baseline justify-between gap-2">
+        <span className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-800 dark:text-zinc-100">
           {label}
         </span>
-        <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">
-          {pct}（{bandJa}）
+        <span className="shrink-0 text-xs tabular-nums text-zinc-600 dark:text-zinc-300">
+          {lrText}
         </span>
       </div>
       <div
-        className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
-        role="presentation"
+        className="flex flex-col gap-1"
+        aria-label={`スケール: 中央0、${edge.low}側 L0〜50、${edge.high}側 R0〜50。位置 ${lrText}`}
       >
         <div
-          className="h-full rounded-full bg-zinc-800 dark:bg-zinc-200"
-          style={{ width: `${pct}%` }}
-        />
+          className="relative h-2.5 w-full overflow-hidden rounded-full bg-zinc-200 shadow-inner dark:bg-zinc-700 dark:shadow-none"
+          role="presentation"
+        >
+          <div
+            className="pointer-events-none absolute top-0 z-[1] h-full w-px -translate-x-px bg-zinc-400/90 dark:bg-zinc-500/90"
+            style={{ left: "50%" }}
+            aria-hidden
+          />
+          {widthPct > 0 && (
+            <div
+              className="absolute top-0 h-full min-w-px rounded-full bg-zinc-800 dark:bg-zinc-200"
+              style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
+            />
+          )}
+        </div>
+        <div className="flex items-start justify-between gap-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400">
+          <span className="min-w-0 max-w-[48%] text-left">
+            <span className="font-medium text-zinc-700 dark:text-zinc-300">
+              {edge.low}
+            </span>
+            <span className="text-zinc-400 dark:text-zinc-500"> · L0〜50</span>
+          </span>
+          <span className="min-w-0 max-w-[48%] text-right">
+            <span className="text-zinc-400 dark:text-zinc-500">R0〜50 · </span>
+            <span className="font-medium text-zinc-700 dark:text-zinc-300">
+              {edge.high}
+            </span>
+          </span>
+        </div>
       </div>
       {framing && (
-        <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1.5 text-xs leading-snug text-zinc-600 dark:text-zinc-400">
           {framing}
         </p>
       )}
