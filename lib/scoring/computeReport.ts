@@ -52,12 +52,12 @@ export function computeScoreReport(
 /** 表示用: 解釈指標の日本語名 */
 export const COMPOSITE_LABEL_JA: Record<(typeof COMPOSITE_KEYS)[number], string> =
   {
-    exploration: "進んで挑戦する力",
-    persistence: "最後までやり抜く力",
-    intrinsicMotivation: "内側から湧く主体性",
-    reflectionDepth: "内省して糧にする力",
-    execution: "実行する行動力",
-    collaboration: "他人と協力できる力",
+    exploration: "探索・安定化傾向",
+    persistence: "学習継続傾向",
+    intrinsicMotivation: "動機源傾向",
+    reflectionDepth: "省察活用傾向",
+    execution: "実行移行傾向",
+    collaboration: "協働活用傾向",
   };
 
 /** スコアバー両端: 低い側（左）・高い側（右）。合成式・copy の傾向に合わせた短ラベル */
@@ -65,10 +65,10 @@ export const COMPOSITE_EDGE_LABELS_JA: Record<
   (typeof COMPOSITE_KEYS)[number],
   { low: string; high: string }
 > = {
-  exploration: { low: "堅守力", high: "挑戦力" },
-  persistence: { low: "環境依拠力", high: "継続力" },
-  intrinsicMotivation: { low: "外発力", high: "内発力" },
-  reflectionDepth: { low: "先行力", high: "省察力" },
-  execution: { low: "思案力", high: "実行力" },
-  collaboration: { low: "自走力", high: "協働力" },
+  exploration: { low: "安定重視", high: "探索重視" },
+  persistence: { low: "状況依存", high: "継続志向" },
+  intrinsicMotivation: { low: "外的動機", high: "内的動機" },
+  reflectionDepth: { low: "行動先行", high: "省察活用" },
+  execution: { low: "熟考先行", high: "実行先行" },
+  collaboration: { low: "個別遂行", high: "協働遂行" },
 };
