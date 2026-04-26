@@ -24,3 +24,30 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
+
+@media print {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+
+  .composite-bar-track {
+    background: #e4e4e7 !important;
+    border: 1px solid #a1a1aa !important;
+    box-shadow: none !important;
+  }
+
+  .composite-bar-fill {
+    background: #18181b !important;
+    border: 1px solid #18181b !important;
+  }
+}

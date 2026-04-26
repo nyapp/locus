@@ -219,7 +219,7 @@ export default function SurveyPage() {
     return (
       <div className="flex min-h-full flex-1 flex-col">
         <ScoreSummary report={scoreReport} onRetry={handleRetry} />
-        <div className="mx-auto w-full max-w-lg px-4 pb-10">
+        <div className="mx-auto w-full max-w-lg px-4 pb-10 print:hidden">
           <Link
             href="/"
             className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-zinc-900 px-4 text-base font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"

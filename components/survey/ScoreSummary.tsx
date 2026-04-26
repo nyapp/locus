@@ -50,6 +50,7 @@ const ARCHETYPE_IMAGE_PATH: Record<CompositeKey, string> = {
 
 export function ScoreSummary({ report, onRetry }: Props) {
   const [isArchetypeCardVisible, setIsArchetypeCardVisible] = useState(true);
+  const [isPrinting, setIsPrinting] = useState(false);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const { dimensions, emotionalReactivity, composites, bandByComposite } =
     report;
@@ -92,6 +93,13 @@ export function ScoreSummary({ report, onRetry }: Props) {
     dimensions.Abstract,
     dimensions.Experiment,
   ];
+  const printedAt = new Date().toLocaleString("ja-JP");
+  const handlePrint = () => {
+    if (typeof window === "undefined") return;
+    setIsPrinting(true);
+    window.print();
+    window.setTimeout(() => setIsPrinting(false), 300);
+  };
 
   return (
     <div className="mx-auto flex w-full min-w-0 max-w-lg flex-col gap-8 px-4 py-10 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
@@ -99,6 +107,9 @@ export function ScoreSummary({ report, onRetry }: Props) {
         <h1 className="mb-1 text-base font-medium text-zinc-500 dark:text-zinc-400">
           Locus - 学習傾向診断
         </h1>
+        <p className="text-xs text-zinc-400 dark:text-zinc-500">
+          出力日時: {printedAt}
+        </p>
       </header>
 
       {report.archetypeLabelJa && (
@@ -275,15 +286,25 @@ export function ScoreSummary({ report, onRetry }: Props) {
         </ul>
       </section>
 
-      {onRetry && (
+      <div className="flex flex-col gap-3 print:hidden">
         <button
           type="button"
-          onClick={onRetry}
-          className="min-h-[48px] rounded-xl border border-zinc-300 bg-white px-4 text-base font-medium text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+          onClick={handlePrint}
+          disabled={isPrinting}
+          className="min-h-[48px] rounded-xl bg-zinc-900 px-4 text-base font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
         >
-          もう一度回答する
+          {isPrinting ? "出力準備中…" : "PDFで保存"}
         </button>
-      )}
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="min-h-[48px] rounded-xl border border-zinc-300 bg-white px-4 text-base font-medium text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+          >
+            もう一度回答する
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -315,7 +336,10 @@ function CompositeBar({
           className="flex flex-col gap-1"
           aria-label={`スケール（算出不可）: 中央0、${edge.low}側 L0〜50、${edge.high}側 R0〜50`}
         >
-          <div className="h-2.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-700" />
+          <div
+            className="composite-bar-track h-2.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-700"
+            aria-hidden
+          />
           <div className="flex items-start justify-between gap-2 text-[10px] leading-tight text-zinc-500 dark:text-zinc-400">
             <span className="min-w-0 text-left">
               <span className="font-medium text-zinc-700 dark:text-zinc-300">
@@ -353,7 +377,7 @@ function CompositeBar({
         aria-label={`スケール: 中央0、${edge.low}側 L0〜50、${edge.high}側 R0〜50。位置 ${lrText}`}
       >
         <div
-          className="relative h-2.5 w-full overflow-hidden rounded-full bg-zinc-200 shadow-inner dark:bg-zinc-700 dark:shadow-none"
+          className="composite-bar-track relative h-2.5 w-full overflow-hidden rounded-full bg-zinc-200 shadow-inner dark:bg-zinc-700 dark:shadow-none"
           role="presentation"
         >
           <div
@@ -363,7 +387,7 @@ function CompositeBar({
           />
           {widthPct > 0 && (
             <div
-              className="absolute top-0 h-full min-w-px rounded-full bg-zinc-800 dark:bg-zinc-200"
+              className="composite-bar-fill absolute top-0 h-full min-w-px rounded-full bg-zinc-800 dark:bg-zinc-200"
               style={{ left: `${leftPct}%`, width: `${widthPct}%` }}
             />
           )}
