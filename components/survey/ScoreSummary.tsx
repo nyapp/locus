@@ -269,7 +269,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
           id="composite-heading"
           className="mb-3 text-sm font-semibold text-zinc-800 dark:text-zinc-100"
         >
-          学習傾向の分析
+          学習傾向のバランス
         </h2>
         <ul className="flex flex-col gap-2.5">
           {COMPOSITE_KEYS.map((key) => (
@@ -288,7 +288,7 @@ export function ScoreSummary({ report, onRetry }: Props) {
           id="theory-heading"
           className="text-sm font-semibold text-zinc-800 dark:text-zinc-100"
         >
-          理論軸
+          理論軸レーダーチャート
         </h2>
         <RadarChart
           title="性格（Big Five + 感情反応性）"
