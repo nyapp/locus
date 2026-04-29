@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LikertRow } from "@/components/survey/LikertRow";
 import { ProgressBar } from "@/components/survey/ProgressBar";
 import { QuestionPanel } from "@/components/survey/QuestionPanel";
+import { ResultReveal } from "@/components/survey/ResultReveal";
 import { ScoreSummary } from "@/components/survey/ScoreSummary";
 import { loadQuestions, loadScale } from "@/lib/parseQuestions";
 import {
@@ -29,6 +30,7 @@ import {
 } from "./keyboardGuards";
 
 const QUESTION_LABEL_ID = "survey-question-text";
+type ViewPhase = "answering" | "revealing" | "result";
 
 export default function SurveyPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -41,6 +43,7 @@ export default function SurveyPage() {
   const [hint, setHint] = useState<string | null>(null);
   const [completed, setCompleted] = useState(false);
   const [scoreReport, setScoreReport] = useState<ScoreReport | null>(null);
+  const [viewPhase, setViewPhase] = useState<ViewPhase>("answering");
 
   useEffect(() => {
     let cancelled = false;
@@ -57,6 +60,7 @@ export default function SurveyPage() {
           setScale(s);
           setScoreReport(storedReport);
           setCompleted(true);
+          setViewPhase("result");
           setLoadError(null);
           setInitDone(true);
           return;
@@ -152,6 +156,7 @@ export default function SurveyPage() {
     clearPersistedSurvey();
     setScoreReport(report);
     setCompleted(true);
+    setViewPhase("revealing");
   }, [current, currentAnswer, questions, answers]);
 
   useEffect(() => {
@@ -185,6 +190,7 @@ export default function SurveyPage() {
     setAnswers({});
     setIndex(0);
     setHint(null);
+    setViewPhase("answering");
   }, []);
 
   if (loadError) {
@@ -215,7 +221,16 @@ export default function SurveyPage() {
     );
   }
 
-  if (completed && scoreReport) {
+  if (viewPhase === "revealing" && scoreReport) {
+    return (
+      <ResultReveal
+        report={scoreReport}
+        onSkip={() => setViewPhase("result")}
+      />
+    );
+  }
+
+  if (viewPhase === "result" && scoreReport) {
     return (
       <div className="flex min-h-full flex-1 flex-col">
         <ScoreSummary report={scoreReport} onRetry={handleRetry} />
@@ -231,7 +246,7 @@ export default function SurveyPage() {
     );
   }
 
-  if (completed && !scoreReport) {
+  if ((viewPhase === "revealing" || viewPhase === "result") && !scoreReport) {
     return (
       <div className="mx-auto flex max-w-lg flex-col gap-4 px-4 py-12">
         <p className="text-zinc-600 dark:text-zinc-400">

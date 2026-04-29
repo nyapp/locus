@@ -49,7 +49,7 @@ const ARCHETYPE_IMAGE_PATH: Record<CompositeKey, string> = {
 };
 
 export function ScoreSummary({ report, onRetry }: Props) {
-  const [isArchetypeCardVisible, setIsArchetypeCardVisible] = useState(true);
+  const [isArchetypeCardVisible, setIsArchetypeCardVisible] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const { dimensions, emotionalReactivity, composites, bandByComposite } =
