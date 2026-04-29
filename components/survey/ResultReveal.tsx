@@ -65,11 +65,11 @@ export function ResultReveal({ report, onSkip }: Props) {
 
   useEffect(() => {
     const delayMs = prefersReducedMotion ? 8700 : 9800;
-    const timer = window.setTimeout(() => {
+    const doneTimer = window.setTimeout(() => {
       setAnalysisDone(true);
     }, delayMs);
     return () => {
-      window.clearTimeout(timer);
+      window.clearTimeout(doneTimer);
     };
   }, [prefersReducedMotion, report.archetypeKey]);
 
@@ -83,43 +83,21 @@ export function ResultReveal({ report, onSkip }: Props) {
     return (
       <section className="mx-auto flex min-h-full w-full max-w-lg flex-1 items-center justify-center px-4 py-10">
         <div
-          className="w-full max-w-sm rounded-2xl border border-zinc-200/80 bg-white/70 px-6 py-6 backdrop-blur-sm dark:border-zinc-700 dark:bg-zinc-900/60"
+          className="flex w-full max-w-xs flex-col items-center justify-center rounded-2xl bg-transparent px-5 py-8"
           aria-live="polite"
           role="status"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500 dark:text-zinc-400">
-            AI Diagnostic Engine
-          </p>
-          <p className="mt-2 text-base font-medium tracking-normal text-zinc-700 dark:text-zinc-200">
+          <div
+            className={[
+              "h-6 w-6 rounded-full border-2 border-zinc-300 border-t-zinc-600 dark:border-zinc-700 dark:border-t-zinc-300",
+              prefersReducedMotion ? "" : "animate-spin",
+            ].join(" ")}
+            aria-hidden="true"
+          />
+          <p className="mt-4 text-sm font-medium text-zinc-600 dark:text-zinc-300">
             診断結果を作成中...
           </p>
-          <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-            <div
-              className={[
-                "h-full w-2/5 rounded-full bg-zinc-900/90 dark:bg-zinc-100/90",
-                prefersReducedMotion
-                  ? "translate-x-[150%]"
-                  : "animate-[ai-progress_1.8s_ease-in-out_infinite]",
-              ].join(" ")}
-            />
-          </div>
-          <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400">
-            回答パターン・傾向・強みを統合しています
-          </p>
           <p className="sr-only">回答データを多角的に解析しています。</p>
-          <style jsx>{`
-            @keyframes ai-progress {
-              0% {
-                transform: translateX(-130%);
-              }
-              50% {
-                transform: translateX(80%);
-              }
-              100% {
-                transform: translateX(260%);
-              }
-            }
-          `}</style>
         </div>
       </section>
     );
