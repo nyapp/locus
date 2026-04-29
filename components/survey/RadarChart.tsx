@@ -10,9 +10,16 @@ type Props = {
   values: (number | null)[];
   /** チャート正方形の一辺（px） */
   size?: number;
+  insightText?: string;
 };
 
-export function RadarChart({ title, labels, values, size = 220 }: Props) {
+export function RadarChart({
+  title,
+  labels,
+  values,
+  size = 220,
+  insightText,
+}: Props) {
   const titleId = useId();
   const n = labels.length;
   const longestLabelLength = labels.reduce(
@@ -109,6 +116,11 @@ export function RadarChart({ title, labels, values, size = 220 }: Props) {
           />
         </svg>
       </div>
+      {insightText && (
+        <p className="mt-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+          {insightText}
+        </p>
+      )}
     </section>
   );
 }

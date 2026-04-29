@@ -39,6 +39,21 @@ const STYLE_RADAR_LABELS = [
   "実験",
 ] as const;
 
+const RADAR_TREND_EXAMPLES: Record<string, string> = {
+  開放性: "新しいテーマを試し、複数案を比較しながら学ぶ",
+  誠実性: "計画を立て、タスクを分解して着実に進める",
+  外向性: "対話や発表を取り入れ、外部刺激で理解を深める",
+  協調性: "他者視点を取り入れ、共同作業で学習を進める",
+  感情反応性: "負荷を調整し、安心できる環境で集中して学ぶ",
+  自律性: "目的と手段を自分で選び、主体的に進める",
+  有能感: "小さな達成を積み上げ、進捗を見える化して継続する",
+  関係性: "伴走者やコミュニティとつながりながら学ぶ",
+  経験: "まず手を動かし、体験から理解を組み立てる",
+  内省: "振り返りと言語化を通じて学びを定着させる",
+  抽象化: "共通パターンを整理し、原理から理解する",
+  実験: "小さく試して検証し、改善を素早く回す",
+};
+
 const ARCHETYPE_IMAGE_PATH: Record<CompositeKey, string> = {
   exploration: "/images/archetype-exploration.png",
   persistence: "/images/archetype-persistence.png",
@@ -93,6 +108,33 @@ export function ScoreSummary({ report, onRetry }: Props) {
     dimensions.Abstract,
     dimensions.Experiment,
   ];
+  const getRadarTrend = (labels: readonly string[], values: (number | null)[]) => {
+    let maxIdx = -1;
+    let maxValue = -Infinity;
+    values.forEach((value, idx) => {
+      if (value === null) return;
+      if (value > maxValue) {
+        maxValue = value;
+        maxIdx = idx;
+      }
+    });
+
+    if (maxIdx < 0) {
+      return {
+        dominant: "未判定",
+        learning: "未判定",
+      };
+    }
+
+    const dominant = labels[maxIdx] ?? "未判定";
+    const example = RADAR_TREND_EXAMPLES[dominant] ?? "自分に合う手順を明確にして学ぶ";
+    return {
+      dominant,
+      learning: example,
+    };
+  };
+  const bfTrend = getRadarTrend(BF_RADAR_LABELS, bfValues);
+  const styleTrend = getRadarTrend(STYLE_RADAR_LABELS, styleValues);
   const printedAt = new Date().toLocaleString("ja-JP");
   const handlePrint = () => {
     if (typeof window === "undefined") return;
@@ -252,11 +294,13 @@ export function ScoreSummary({ report, onRetry }: Props) {
           title="性格（Big Five + 感情反応性）"
           labels={[...BF_RADAR_LABELS]}
           values={[...bfValues]}
+          insightText={`診断の結果、あなたは「${bfTrend.dominant}」の傾向がもっとも強く、学習において「${bfTrend.learning}」傾向があります。`}
         />
         <RadarChart
           title="動機づけ・学習スタイル（SDT + Kolb）"
           labels={[...STYLE_RADAR_LABELS]}
           values={[...styleValues]}
+          insightText={`診断の結果、あなたは「${styleTrend.dominant}」の傾向がもっとも強く、学習において「${styleTrend.learning}」傾向があります。`}
         />
         <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
           Kolb の Balance（固定化・学習適応）はこのレーダーには含めていません。
@@ -361,7 +405,6 @@ function CompositeBar({
 
   const lrText = formatCompositeLrDisplay(value);
   const { leftPct, widthPct } = compositeLrBarStyle(value);
-
   return (
     <li className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 dark:border-zinc-700 dark:bg-zinc-900/50">
       <div className="mb-1.5 flex min-w-0 items-baseline justify-between gap-2">
