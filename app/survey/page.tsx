@@ -9,6 +9,10 @@ import { ResultReveal } from "@/components/survey/ResultReveal";
 import { ScoreSummary } from "@/components/survey/ScoreSummary";
 import { loadQuestions, loadScale } from "@/lib/parseQuestions";
 import {
+  applyPersistedQuestionOrder,
+  buildOptimizedQuestionOrder,
+} from "@/lib/questionOrder";
+import {
   clearScoreReport,
   loadScoreReport,
   persistScoreReport,
@@ -49,14 +53,14 @@ export default function SurveyPage() {
     let cancelled = false;
     (async () => {
       try {
-        const [q, s] = await Promise.all([loadQuestions(), loadScale()]);
+        const [rawQuestions, s] = await Promise.all([loadQuestions(), loadScale()]);
         if (cancelled) return;
         const storedReport = loadScoreReport();
         if (
           storedReport &&
           storedReport.schemaVersion === SCORE_REPORT_SCHEMA_VERSION
         ) {
-          setQuestions(q);
+          setQuestions(rawQuestions);
           setScale(s);
           setScoreReport(storedReport);
           setCompleted(true);
@@ -66,11 +70,20 @@ export default function SurveyPage() {
           return;
         }
         const saved = loadPersistedSurvey();
-        setQuestions(q);
+        const restoredOrder = saved?.orderIds
+          ? applyPersistedQuestionOrder(rawQuestions, saved.orderIds)
+          : null;
+        const resolvedQuestions = restoredOrder
+          ? restoredOrder
+          : saved
+            ? rawQuestions
+            : buildOptimizedQuestionOrder(rawQuestions);
+
+        setQuestions(resolvedQuestions);
         setScale(s);
-        if (saved && q.length > 0) {
+        if (saved && resolvedQuestions.length > 0) {
           setAnswers(saved.answers);
-          setIndex(Math.min(saved.index, Math.max(0, q.length - 1)));
+          setIndex(Math.min(saved.index, Math.max(0, resolvedQuestions.length - 1)));
         }
         setLoadError(null);
       } catch (e) {
@@ -87,8 +100,12 @@ export default function SurveyPage() {
 
   useEffect(() => {
     if (!initDone || questions.length === 0 || loadError || completed) return;
-    persistSurvey(answers, index);
-  }, [answers, index, initDone, questions.length, loadError, completed]);
+    persistSurvey(
+      answers,
+      index,
+      questions.map((q) => q.id),
+    );
+  }, [answers, index, initDone, questions, loadError, completed]);
 
   const total = questions.length;
   const current = questions[index];
@@ -183,6 +200,7 @@ export default function SurveyPage() {
   }, [current, completed, index, total, finish, goNext]);
 
   const handleRetry = useCallback(() => {
+    setQuestions((prev) => buildOptimizedQuestionOrder(prev));
     clearScoreReport();
     clearPersistedSurvey();
     setScoreReport(null);
