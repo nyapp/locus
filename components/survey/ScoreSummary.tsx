@@ -366,6 +366,8 @@ function CompositeBar({
   const edge = COMPOSITE_EDGE_LABELS_JA[ckey];
   const framing =
     band && value !== null ? getCompositeLowFraming(ckey, band) : null;
+  const unavailableFraming =
+    "回答状況の関係で、この項目のコメントはまだ表示できません。";
 
   if (value === null || band === null) {
     return (
@@ -399,6 +401,9 @@ function CompositeBar({
             </span>
           </div>
         </div>
+        <p className="mt-1.5 text-xs leading-snug text-zinc-500 dark:text-zinc-400">
+          {unavailableFraming}
+        </p>
       </li>
     );
   }

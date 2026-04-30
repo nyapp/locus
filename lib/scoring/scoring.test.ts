@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Question } from "../types";
+import { getCompositeLowFraming } from "./copy";
 import { computeComposites } from "./composites";
 import { computeDimensionScores, buildNormalizedByQuestionId } from "./dimensions";
 import { normalizeItemScore } from "./normalize";
@@ -184,5 +185,26 @@ describe("composite L/R 表示（中央 50 を 0）", () => {
     expect(compositeLrBarStyle(100)).toEqual({ leftPct: 50, widthPct: 50 });
     expect(compositeLrBarStyle(25)).toEqual({ leftPct: 25, widthPct: 25 });
     expect(compositeLrBarStyle(75)).toEqual({ leftPct: 50, widthPct: 25 });
+  });
+});
+
+describe("composite framing copy", () => {
+  it("全バンドで補助コメントを返す", () => {
+    const keys = [
+      "exploration",
+      "persistence",
+      "intrinsicMotivation",
+      "reflectionDepth",
+      "execution",
+      "collaboration",
+    ] as const;
+    const bands = ["veryLow", "low", "medium", "high", "veryHigh"] as const;
+
+    for (const key of keys) {
+      for (const band of bands) {
+        const copy = getCompositeLowFraming(key, band);
+        expect(copy.length).toBeGreaterThan(0);
+      }
+    }
   });
 });
