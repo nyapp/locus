@@ -294,13 +294,13 @@ export function ScoreSummary({ report, onRetry }: Props) {
           title="性格（Big Five + 感情反応性）"
           labels={[...BF_RADAR_LABELS]}
           values={[...bfValues]}
-          insightText={`診断の結果、あなたは「${bfTrend.dominant}」の傾向がもっとも強く、学習において「${bfTrend.learning}」傾向があります。`}
+          insightText={`診断の結果、あなたの性格は「${bfTrend.dominant}」の傾向がもっとも強く、学習において「${bfTrend.learning}」傾向があります。`}
         />
         <RadarChart
           title="動機づけ・学習スタイル（SDT + Kolb）"
           labels={[...STYLE_RADAR_LABELS]}
           values={[...styleValues]}
-          insightText={`診断の結果、あなたは「${styleTrend.dominant}」の傾向がもっとも強く、学習において「${styleTrend.learning}」傾向があります。`}
+          insightText={`診断の結果、あなたの学習スタイルは「${styleTrend.dominant}」の傾向がもっとも強く、学習において「${styleTrend.learning}」傾向があります。`}
         />
         <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
           Kolb の Balance（固定化・学習適応）はこのレーダーには含めていません。
